@@ -63,6 +63,7 @@ void SimpleFFT4G::getMagnitude(int n, float* a, float* mag){
 }
 
 
+
 void SimpleFFT4G::complexdft(int n, int isgn, float *a) {
     /*
     <case1>
@@ -86,17 +87,15 @@ void SimpleFFT4G::complexdft(int n, int isgn, float *a) {
     float *w;// = (float *)malloc(n+2, sizeof(float));//calloc zeros out memory
     int *ip;// = (int *)malloc(n+2, sizeof(int));
     
-    printf("\nusing Complex method\n");
-    for (int i = 0; i < 2*n; i++)
-        printf("before_cdft a[%i] %f\n", i, a[i]);
+    
     
     w = new float[n+2];
     ip = new int[n+2];
     ip[0] = 0;
     cdft(2*n, isgn, a, ip, w);//nb the 2*n in the call here
     
-    for (int i = 0; i < 2*n; i++)
-        printf("cdft a[%i] %f\n", i, a[i]);
+    //for (int i = 0; i < 2*n; i++)
+    //    printf("cdft a[%i] %f\n", i, a[i]);
     
     float real[n/2];
     float imag[n/2];
@@ -105,8 +104,41 @@ void SimpleFFT4G::complexdft(int n, int isgn, float *a) {
         real[i] = a[(2*i)+n];
         imag[i] = a[(2*i)+n+1];
     }
+    
     for (int i = 0; i < n/2; i++)
         printf("complex_fft[%i]: %f + %fj\n", i, real[i], imag[i]);
     
     printf("nyquist is %f\n", a[0]);
+}
+
+void SimpleFFT4G::inverseComplexDFT(int n, float *a) {
+    /*
+     Inverse of
+     ddct(n, -1, a, ip, w);
+     is
+     a[0] *= 0.5;
+     ddct(n, 1, a, ip, w);
+     for (j = 0; j <= n - 1; j++) {
+     a[j] *= 2.0 / n;
+    */
+    float *w;
+    int *ip;
+    w = new float[n+2];
+    ip = new int[n+2];
+    cdft(2*n, 1, a, ip, w);
+    for (int j = 0; j <= 2 * n - 1; j++) {
+        a[j] *= 1.0 / n;
+    }
+    
+    float real[n/2];
+    float imag[n/2];
+    
+    for (int i = 0; i < n; i++) {
+        real[i] = a[(2*i)+n];
+        imag[i] = a[(2*i)+n+1];
+    }
+    
+    for (int i = 0; i < n; i++)
+        printf("inv_complex_fft[%i]: %f + %fj\n", i, real[i], imag[i]);
+    
 }

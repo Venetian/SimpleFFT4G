@@ -37,6 +37,8 @@ public:
     void getMagnitude(int n, float* a, float* mag);
     
     void complexdft(int n, int isgn, float *a);
+    
+    void inverseComplexDFT(int n, float *a);
 };
 
 #endif /* defined(__SimpleFFT4G__SimpleFFT4G__) */

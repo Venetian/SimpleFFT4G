@@ -71,10 +71,27 @@ int main(int argc, const char * argv[]) {
         fft.realdft(n, isgn, &buffer[0], &ip[0], &w[0]);
         
         
+        
+        printf("\nusing Complex method\n");
+        for (int i = 0; i < 2*n; i++)
+            printf("before_cdft a[%i] %f\n", i, complexBuffer[i]);
+        
         fft.complexdft(n, isgn, &complexBuffer[0]);
         
         
-        if (false) {
+        for (int i = 0; i < 2*n; i++)
+            printf("after_cdft a[%i] %f\n", i, complexBuffer[i]);
+        
+        
+        printf("INVERSE\n");
+        
+        fft.inverseComplexDFT(n, &complexBuffer[0]);
+        
+        
+        for (int i = 0; i < 2*n; i++)
+            printf("inverse[%i] %f\n", i, complexBuffer[i]);
+        
+        if (false) {//not working right?
             float magnitude[1+n/2];
             
             fft.getMagnitude(n, &buffer[0], &magnitude[0]);
@@ -106,6 +123,10 @@ int main(int argc, const char * argv[]) {
         err = errorcheck(0, n - 1, 2.0 / n, a);
         printf("rdft err= %g \n", err);
     }
+    
+    
+    
+    
     return 0;
 }
 
